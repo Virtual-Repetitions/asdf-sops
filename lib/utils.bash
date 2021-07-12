@@ -2,8 +2,7 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for sops.
-GH_REPO="https://github.com/Virtual-Repetitions/asdf-sops"
+GH_REPO="https://github.com/mozilla/sops"
 TOOL_NAME="sops"
 TOOL_TEST="sops --version"
 
@@ -12,9 +11,8 @@ fail() {
   exit 1
 }
 
-curl_opts=(-fsSL)
+curl_opts=(-fsSL --create-dirs)
 
-# NOTE: You might want to remove this if sops is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -31,39 +29,37 @@ list_github_tags() {
 }
 
 list_all_versions() {
-  # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-  # Change this function if sops has other means of determining installable versions.
   list_github_tags
 }
 
 download_release() {
-  local version filename url
+  local version download_folder download_filename release_filename url
   version="$1"
-  filename="$2"
+  download_folder="$2"
+  download_filename="$download_folder/bin/$TOOL_NAME"
+  release_filename="$(get_release_filename "${version}")"
 
-  # TODO: Adapt the release URL convention for sops
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  url="$GH_REPO/releases/download/v${version}/${release_filename}"
 
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  curl "${curl_opts[@]}" -o "$download_filename" "$url" || fail "Could not download $url"
 }
 
 install_version() {
   local install_type="$1"
   local version="$2"
   local install_path="$3"
+  local download_folder="$4"
 
   if [ "$install_type" != "version" ]; then
     fail "asdf-$TOOL_NAME supports release installs only"
   fi
 
   (
-    mkdir -p "$install_path"
-    cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
-
-    # TODO: Asert sops executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
+    cp -r $download_folder/* $install_path
+    chmod +x "$install_path/bin/$tool_cmd"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
     echo "$TOOL_NAME $version installation was successful!"
@@ -71,4 +67,30 @@ install_version() {
     rm -rf "$install_path"
     fail "An error ocurred while installing $TOOL_NAME $version."
   )
+}
+
+# Based on code from https://github.com/salasrod/asdf-cockroach
+get_platform_name() {
+  if [ "$(uname)" == "Darwin" ]; then
+    echo "darwin"
+  elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ] || [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+    echo "windows"
+  elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    echo "linux"
+  fi
+}
+
+get_release_filename() {
+  version=$1
+  plat="$(get_platform_name)"
+  if [[ "${plat}" == "darwin" ]]; then
+    echo "sops-v${version}.darwin"
+  elif [[ "${plat}" == "windows" ]]; then
+    echo "sops-v${version}.exe"
+  elif [[ "${plat}" == "linux" ]]; then
+    echo "sops-v${version}.linux"
+  else
+    echo "Could not find a SOPS binary release for your platform."
+    exit 1
+  fi
 }
