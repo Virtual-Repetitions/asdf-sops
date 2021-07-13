@@ -2,7 +2,6 @@
 
 # asdf-sops [![Build](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/build.yml/badge.svg)](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/build.yml) [![Lint](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/lint.yml/badge.svg)](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/lint.yml)
 
-
 [sops](https://github.com/mozilla/sops) plugin for the [asdf version manager](https://asdf-vm.com).
 
 </div>
@@ -25,8 +24,6 @@
 Plugin:
 
 ```shell
-asdf plugin add sops
-# or
 asdf plugin add sops https://github.com/virtualrepetitions/asdf-sops.git
 ```
 
