@@ -1,6 +1,6 @@
 <div align="center">
 
-# asdf-sops [![Build](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/build.yml/badge.svg)](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/build.yml) [![Lint](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/lint.yml/badge.svg)](https://github.com/virtualrepetitions/asdf-sops/actions/workflows/lint.yml)
+# asdf-sops [![Build](https://github.com/virtual-repetitions/asdf-sops/actions/workflows/build.yml/badge.svg)](https://github.com/virtual-repetitions/asdf-sops/actions/workflows/build.yml) [![Lint](https://github.com/virtual-repetitions/asdf-sops/actions/workflows/lint.yml/badge.svg)](https://github.com/virtual-repetitions/asdf-sops/actions/workflows/lint.yml)
 
 [sops](https://github.com/mozilla/sops) plugin for the [asdf version manager](https://asdf-vm.com).
 
