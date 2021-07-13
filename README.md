@@ -24,20 +24,20 @@
 Plugin:
 
 ```shell
-asdf plugin add sops https://github.com/virtualrepetitions/asdf-sops.git
+asdf plugin add vreps-sops https://github.com/virtualrepetitions/asdf-sops.git
 ```
 
 sops:
 
 ```shell
 # Show all installable versions
-asdf list-all sops
+asdf list-all vreps-sops
 
 # Install specific version
-asdf install sops latest
+asdf install vreps-sops latest
 
 # Set a version globally (on your ~/.tool-versions file)
-asdf global sops latest
+asdf global vreps-sops latest
 
 # Now sops commands are available
 sops --version
@@ -45,6 +45,12 @@ sops --version
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
 install & manage versions.
+
+# FAQ
+
+## Why vreps-sops instead of sops?
+
+We call it vreps-sops to avoid a naming conflict with [this sops plugin](https://github.com/feniix/asdf-sops). This was created without realizing that plugin existed. However, I think maintaining our own asdf plugin allows for greater security around a core piece of our codebase.
 
 # Contributing
 
